@@ -1,0 +1,29 @@
+Office Hours Preference
+
+    Tuesday Mornings
+    Tuesday Evenings
+
+
+    Wednesday Mornings
+    Wednesday Evenings
+
+
+Values / Goals
+
+    Master Java and Object Oriented Design to be able to complete technical interviews in Java
+
+    Master Java to create real-world applications and solve problems
+
+    Become a Java Ninja
+
+
+
+Inventory
+
+    Mac
+    M1 Pro, 10 Core
+    MacBook Pro (16-inch, 2021)
+    Monterey
+    RAM 16GB
+    Non-volatile memory - 500GB: 206GB left
+
