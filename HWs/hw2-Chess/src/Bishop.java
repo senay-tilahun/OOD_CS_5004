@@ -19,6 +19,11 @@ public class Bishop extends AbstractChessPiece {
 
   @Override
   public boolean canMove(int row, int col) {
-    return false;
+    // check if the cell is within the chess board boarder
+    if (cellOutsideBoard(row, col)){
+      return false;
+    }
+    // Utilize method in AbstractChessPiece to check if Bishop can move diagonally
+    return canMoveDiagonal(row, col);
   }
 }

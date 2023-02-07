@@ -11,7 +11,7 @@ public interface ChessPiece {
   int getRow();
 
   /**
-   * Returns the current Column of the ChessPieceon the board.
+   * Returns the current Column of the ChessPiece on the board.
    * @return the current Column of the ChessPiece
    */
   int getColumn();

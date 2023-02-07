@@ -18,6 +18,11 @@ public class Queen extends AbstractChessPiece{
 
   @Override
   public boolean canMove(int row, int col) {
-    return false;
+    // check if the cell is within the chess board boarder
+    if (cellOutsideBoard(row, col)){
+      return false;
+    }
+    // check if piece can move horizontal or vertical or diagonal
+    return canMoveHorizontal(row) || canMoveVertical(col) || canMoveDiagonal(row, col);
   }
 }

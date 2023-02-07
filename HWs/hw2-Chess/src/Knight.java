@@ -16,13 +16,16 @@ public class Knight extends AbstractChessPiece{
     super(row, col, color);
   }
 
-  /**
-   * @param row the row of the given cell to check possible move
-   * @param col the column of the given cell to check possible move
-   * @return
-   */
+
   @Override
   public boolean canMove(int row, int col) {
-    return false;
+    // check if the cell is within the chess board boarder
+    if (cellOutsideBoard(row, col)){
+      return false;
+    }
+    // check if it can move 2 steps forward and right
+    int rowDifference = Math.abs(this.getRow() - row);
+    int colDifference = Math.abs(this.getColumn() - col);
+    return (rowDifference == 2 && colDifference == 1) || (rowDifference == 1 && colDifference == 2);
   }
 }

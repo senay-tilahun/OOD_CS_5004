@@ -53,4 +53,52 @@ public abstract class AbstractChessPiece implements ChessPiece{
     // if this and piece are same color, cannot kill
     return false;
   }
+
+  /**
+   * Helper method to confirm that a given cell is within the chess board boarders
+   * @param row the row of the given cell to check
+   * @param col the col of the given cell to check
+   * @return false if the given cell is not outside the board, throws exception otherwise
+   */
+  public boolean cellOutsideBoard(int row, int col) {
+    // if cell is outside board - throw exception
+    if (row < 0 || row >= 8 || col < 0 || col >= 8) {
+      throw new IllegalArgumentException("cell is outside board");
+    } // else return false
+    return false;
+  }
+
+  /**
+   * Helper method to check if a given ChessPiece can move diagonally on the board
+   * towards a given cell
+   * @param row the given cell row to check
+   * @param col the given cell column to check
+   * @return true if the ChessPiece can move diagonally to the cell, false otherwise
+   */
+  public boolean canMoveDiagonal(int row, int col) {
+    // check if the absolute value of the difference in row and column is the same
+    return Math.abs(this.getRow() - row) == Math.abs(this.getColumn() - col);
+  }
+
+  /**
+   * Helper method to check if a given ChessPiece can move horizontally on the board
+   * towards a given cell
+   * @param row the given cell row to check
+   * @return true if the ChessPiece can move horizontally to the cell, false otherwise
+   */
+  public boolean canMoveHorizontal(int row) {
+    // check if this piece and the given cell have the same row
+    return this.getRow() == row;
+  }
+
+  /**
+   * Helper method to check if a given ChessPiece can move vertically on the board
+   * towards a given cell
+   * @param col the given cell column to check
+   * @return true if the ChessPiece can move vertically to the cell, false otherwise
+   */
+  public boolean canMoveVertical(int col) {
+    // check if this piece and the given cell have the same column
+    return this.getColumn() == col;
+  }
 }

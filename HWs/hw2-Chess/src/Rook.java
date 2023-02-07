@@ -18,6 +18,11 @@ public class Rook extends AbstractChessPiece{
 
   @Override
   public boolean canMove(int row, int col) {
-    return false;
+    // check if the cell is within the chess board boarder
+    if (cellOutsideBoard(row, col)){
+      return false;
+    }
+    // utilize methods in Abstract class to check if Rook can move vertical or horizontal
+    return canMoveHorizontal(row) || canMoveVertical(col);
   }
 }
