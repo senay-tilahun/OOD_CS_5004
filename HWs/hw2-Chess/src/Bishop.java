@@ -17,6 +17,12 @@ public class Bishop extends AbstractChessPiece {
     super(row, col, color);
   }
 
+  /**
+   * Computes if a ChessPiece can move to a given cell (row, col)
+   * @param row the row of the given cell to check possible move
+   * @param col the column of the given cell to check possible move
+   * @return true if the ChessPiece can move to the given cell, false otherwise
+   * */
   @Override
   public boolean canMove(int row, int col) {
     // check if the cell is within the chess board boarder

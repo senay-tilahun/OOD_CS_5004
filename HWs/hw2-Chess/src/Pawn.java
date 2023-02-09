@@ -26,7 +26,7 @@ public class Pawn extends AbstractChessPiece{
     // edit - need switch statement depending on color
     // if it can move diagonally to this piece
     // first check if the pieces are opposing colors
-    if (this.color != piece.getColor()){
+    if (this.getColor() != piece.getColor()){
       // if opposing colors, check if this can move to piece position
       return this.canMoveDiagonal(piece.getRow(), piece.getColumn());
     }
@@ -54,7 +54,12 @@ public class Pawn extends AbstractChessPiece{
     };
   }
 
-
+  /**
+   * Computes if a ChessPiece can move to a given cell (row, col)
+   * @param row the row of the given cell to check possible move
+   * @param col the column of the given cell to check possible move
+   * @return true if the ChessPiece can move to the given cell, false otherwise
+   * */
   @Override
   public boolean canMove(int row, int col) {
     // check if the cell is within the chess board boarder

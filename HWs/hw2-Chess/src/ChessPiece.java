@@ -32,7 +32,7 @@ public interface ChessPiece {
 
   /**
    * Computes if a ChessPiece can kill another ChessPiece on the board
-   * starting from where it currently
+   * starting from where it is currently
    * @param piece the provided ChessPiece to check whether this ChessPiece can kill
    * @return true if the ChessPiece can kill the given ChessPiece, false otherwise
    * */

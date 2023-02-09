@@ -5,9 +5,9 @@
  */
 
 public abstract class AbstractChessPiece implements ChessPiece{
-  int row;
-  int column;
-  Color color;
+  private int row;
+  private int column;
+  private Color color;
 
   /**
    * Constructs an AbstractChessPiece
@@ -21,32 +21,43 @@ public abstract class AbstractChessPiece implements ChessPiece{
     this.color = color;
   }
 
+  /**
+   * Returns the current row of the ChessPiece on the board.
+   * @return the current row of the ChessPiece
+   */
   @Override
   public int getRow() {
     return this.row;
   }
 
+  /**
+   * Returns the current Column of the ChessPiece on the board.
+   * @return the current Column of the ChessPiece
+   */
   @Override
   public int getColumn() {
     return this.column;
   }
 
+  /**
+   * Returns the color of the ChessPiece
+   * @return the color of the ChessPiece
+   * */
   @Override
   public Color getColor() {
     return this.color;
   }
 
-  /*
-  @Override
-  public boolean canMove(int row, int col) {
-    return false;
-  }
-  * */
-
+  /**
+   * Computes if a ChessPiece can kill another ChessPiece on the board
+   * starting from where it is currently
+   * @param piece the provided ChessPiece to check whether this ChessPiece can kill
+   * @return true if the ChessPiece can kill the given ChessPiece, false otherwise
+   * */
   @Override
   public boolean canKill(ChessPiece piece) {
     // first check if the pieces are opposing colors
-    if (this.color != piece.getColor()){
+    if (this.getColor() != piece.getColor()){
       // if opposing colors, check if this can move to piece position
       return this.canMove(piece.getRow(), piece.getColumn());
     }
@@ -63,7 +74,7 @@ public abstract class AbstractChessPiece implements ChessPiece{
   public boolean cellOutsideBoard(int row, int col) {
     // if cell is outside board - throw exception
     if (row < 0 || row >= 8 || col < 0 || col >= 8) {
-      throw new IllegalArgumentException("cell is outside board");
+      throw new IllegalArgumentException("Cell is outside board");
     } // else return false
     return false;
   }
