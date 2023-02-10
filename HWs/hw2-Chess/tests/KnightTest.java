@@ -35,11 +35,9 @@ public class KnightTest {
   @Test
   public void testCanMove() {
 // move horizontal
-    assertTrue(knight1.canMove(7, 3));
-    assertTrue(knight2.canMove(0, 5));
-    // move vertical
-    assertTrue(knight1.canMove(3, 7));
-    assertTrue(knight2.canMove(4, 0));
+    assertTrue(knight1.canMove(3, 1));
+    assertTrue(knight2.canMove(2, 1));
+
     // try diagonal
     assertFalse(knight1.canMove(2,2));
     assertFalse(knight2.canMove(4,4));
@@ -53,10 +51,12 @@ public class KnightTest {
 
   @Test
   public void testCanKill() {
-    ChessPiece temp1 = new Rook(0, 3, Color.BLACK);
-    ChessPiece temp2 = new Rook(7, 3, Color.WHITE);
-    assertTrue(knight1.canKill(temp2));
-    assertTrue(knight2.canKill(temp1));
+    ChessPiece temp1 = new Queen(3, 1, Color.BLACK);
+    ChessPiece temp2 = new Knight(2, 1, Color.WHITE);
+    ChessPiece temp3 = new Pawn(3, 1, Color.WHITE);
+    ChessPiece temp4 = new Bishop(2, 1, Color.BLACK);
+    assertTrue(knight1.canKill(temp3));
+    assertTrue(knight2.canKill(temp4));
     assertFalse(knight1.canKill(temp1));
     assertFalse(knight2.canKill(temp2));
   }

@@ -9,39 +9,36 @@ public class PawnTest {
 
   @Before
   public void testSetUp() throws Exception {
-    pawn1 = new Pawn(2, 3, Color.BLACK);
-    pawn2 = new Pawn(0, 0, Color.WHITE);
+    pawn1 = new Pawn(1, 2, Color.WHITE);
+    pawn2 = new Pawn(6, 6, Color.BLACK);
   }
 
   @Test
   public void testGetRow() {
-    assertEquals(2, pawn1.getRow());
-    assertEquals(0, pawn2.getRow());
+    assertEquals(1, pawn1.getRow());
+    assertEquals(6, pawn2.getRow());
   }
 
   @Test
   public void testGetColumn() {
-    assertEquals(3, pawn1.getColumn());
-    assertEquals(0, pawn2.getColumn());
+    assertEquals(2, pawn1.getColumn());
+    assertEquals(6, pawn2.getColumn());
   }
 
   @Test
   public void testGetColor() {
-    assertEquals(Color.BLACK, pawn1.getColor());
-    assertEquals(Color.WHITE, pawn2.getColor());
+    assertEquals(Color.WHITE, pawn1.getColor());
+    assertEquals(Color.BLACK, pawn2.getColor());
   }
 
   @Test
   public void testCanMove() {
-// move horizontal
-    assertTrue(pawn1.canMove(7, 3));
-    assertTrue(pawn2.canMove(0, 5));
     // move vertical
-    assertTrue(pawn1.canMove(3, 7));
-    assertTrue(pawn2.canMove(4, 0));
-    // try diagonal
-    assertFalse(pawn1.canMove(2,2));
-    assertFalse(pawn2.canMove(4,4));
+    assertTrue(pawn1.canMove(2, 2));
+    assertTrue(pawn2.canMove(5, 6));
+    // can not move
+    assertFalse(pawn1.canMove(5,2));
+    assertFalse(pawn2.canMove(5,4));
   }
 
   @Test (expected = IllegalArgumentException.class)
@@ -52,12 +49,16 @@ public class PawnTest {
 
   @Test
   public void testCanKill() {
-    ChessPiece temp1 = new Rook(0, 3, Color.BLACK);
-    ChessPiece temp2 = new Rook(7, 3, Color.WHITE);
-    assertTrue(pawn1.canKill(temp2));
-    assertTrue(pawn2.canKill(temp1));
-    assertFalse(pawn1.canKill(temp1));
-    assertFalse(pawn2.canKill(temp2));
+    ChessPiece temp1 = new Pawn(2, 3, Color.BLACK);
+    ChessPiece temp2 = new Rook(2, 1, Color.WHITE);
+    ChessPiece temp3 = new Pawn(5, 7, Color.BLACK);
+    ChessPiece temp4 = new Rook(5, 5, Color.WHITE);
+    // can move and different
+    assertTrue(pawn1.canKill(temp1));
+    assertTrue(pawn2.canKill(temp4));
+    // can move but same color
+    assertFalse(pawn1.canKill(temp2));
+    assertFalse(pawn2.canKill(temp3));
   }
 
 

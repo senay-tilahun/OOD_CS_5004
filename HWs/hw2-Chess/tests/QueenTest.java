@@ -6,58 +6,64 @@ import org.junit.Test;
 public class QueenTest {
 
   ChessPiece queen1;
-  ChessPiece rook2;
+  ChessPiece queen2;
 
   @Before
   public void testSetUp() throws Exception {
     queen1 = new Queen(2, 3, Color.BLACK);
-    rook2 = new Queen(0, 0, Color.WHITE);
+    queen2 = new Queen(0, 3, Color.WHITE);
   }
 
   @Test
   public void testGetRow() {
     assertEquals(2, queen1.getRow());
-    assertEquals(0, rook2.getRow());
+    assertEquals(0, queen2.getRow());
   }
 
   @Test
   public void testGetColumn() {
     assertEquals(3, queen1.getColumn());
-    assertEquals(0, rook2.getColumn());
+    assertEquals(3, queen2.getColumn());
   }
 
   @Test
   public void testGetColor() {
     assertEquals(Color.BLACK, queen1.getColor());
-    assertEquals(Color.WHITE, rook2.getColor());
+    assertEquals(Color.WHITE, queen2.getColor());
   }
 
   @Test
   public void testCanMove() {
 // move horizontal
-    assertTrue(queen1.canMove(7, 3));
-    assertTrue(rook2.canMove(0, 5));
+    assertTrue(queen1.canMove(2, 3));
+    assertTrue(queen2.canMove(0, 5));
     // move vertical
-    assertTrue(queen1.canMove(3, 7));
-    assertTrue(rook2.canMove(4, 0));
-    // try diagonal
-    assertFalse(queen1.canMove(2,2));
-    assertFalse(rook2.canMove(4,4));
+    assertTrue(queen1.canMove(3, 3));
+    assertTrue(queen2.canMove(4, 3));
+    //try diagonal
+    assertTrue(queen1.canMove(4, 5));
+    assertTrue(queen2.canMove(2, 1));
+
+    // try can't move
+    assertFalse(queen1.canMove(3,0));
+    assertFalse(queen2.canMove(4,1));
   }
 
   @Test (expected = IllegalArgumentException.class)
   public void testCanMoveException() {
     assertFalse(queen1.canMove(8, 0));
-    assertFalse(rook2.canMove(4, -1));
+    assertFalse(queen2.canMove(4, -1));
   }
 
   @Test
   public void testCanKill() {
-    ChessPiece temp1 = new Rook(0, 3, Color.BLACK);
-    ChessPiece temp2 = new Rook(7, 3, Color.WHITE);
-    assertTrue(queen1.canKill(temp2));
-    assertTrue(rook2.canKill(temp1));
+    ChessPiece temp1 = new Queen(4, 1, Color.BLACK);
+    ChessPiece temp11 = new Bishop(4, 1, Color.WHITE);
+    ChessPiece temp2 = new Knight(3, 6, Color.WHITE);
+    ChessPiece temp22 = new Rook(3, 6, Color.BLACK);
+    assertTrue(queen1.canKill(temp11));
+    assertTrue(queen2.canKill(temp22));
     assertFalse(queen1.canKill(temp1));
-    assertFalse(rook2.canKill(temp2));
+    assertFalse(queen2.canKill(temp2));
   }
 }

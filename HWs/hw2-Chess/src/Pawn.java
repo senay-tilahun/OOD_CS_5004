@@ -69,8 +69,8 @@ public class Pawn extends AbstractChessPiece{
     // Can move one place forward or check if canKill
     // use enhanced switch
     return switch (this.getColor()) {
-      case BLACK -> (this.getColumn() - 1 == col);
-      case WHITE -> (this.getColumn() + 1 == col);
+      case BLACK -> (this.getRow() - 1 == row && this.getColumn() == col);
+      case WHITE -> (this.getRow() + 1 == row && this.getColumn() == col);
     };
 
   }
