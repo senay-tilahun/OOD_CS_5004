@@ -24,7 +24,7 @@ public class PetRockTest {
   }
 
   @Test
-  public void getName() {
+  public void testGetName() {
     // test getter
     assertEquals("Rocky", rocky.getName());
   }
@@ -47,7 +47,7 @@ public class PetRockTest {
   }
 
   @Test
-  public void name() throws Exception {
+  public void testGetHappymsg() throws Exception {
     rocky.playWithRock();
     String msg = rocky.getHappyMessage();
     assertEquals("I'm happy", msg);
@@ -59,12 +59,12 @@ public class PetRockTest {
   }
 
   @Test (expected = IllegalArgumentException.class)
-  public void emptyNameFail() {
+  public void testEmptyNameFail() {
     PetRock woof = new PetRock("");
   }
 
   @Test (expected = ArithmeticException.class)
-  public void emptyWeightFail() {
+  public void testEmptyWeightFail() {
     PetRock woof = new PetRock("rock", 0);
   }
 

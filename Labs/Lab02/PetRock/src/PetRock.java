@@ -8,7 +8,7 @@ public class PetRock {
   private double weight;
 
   /**
-   *Constructs a PetRock object and initializes it
+   * Constructs a PetRock object and initializes it
    * @param name the name of the PetRock
    * */
   public PetRock(String name){
@@ -19,6 +19,11 @@ public class PetRock {
     this.happy = false;
   }
 
+  /**
+   * Constructs a PetRock object and initializes it
+   * @param name the name of the PetRock
+   * @param weight the weight of the PetRock
+   */
   public PetRock(String name, double weight){
     if (weight == 0) {
       throw new ArithmeticException();
@@ -36,15 +41,27 @@ public class PetRock {
     return name;
   }
 
-
+  /**
+   * Checks if this PetRock is happy
+   * @return true if this PetRock is happy, false otherwise
+   */
   public boolean isHappy() {
     return happy;
   }
 
+  /**
+   * Method to represent user playing with this PetRock
+   * Changes the happy instance var to true
+   */
   public void playWithRock() {
     this.happy = true;
   }
 
+  /**
+   * Checks if this PetRock is happy or not
+   * returns an IllegaStateException if not happy
+   * @return a String "I'm happy" if PetRock is happy
+   */
   public String getHappyMessage(){
     if (!isHappy()){
       throw new IllegalStateException();
@@ -52,10 +69,18 @@ public class PetRock {
     return "I'm happy";
   }
 
+  /**
+   * Method to get the favorite number of this PetRock
+   * @return the fav number of this pet rock
+   */
   public int getFavNumber(){
     return 42;
   }
 
+  /**
+   * Constructs a string representation of this PetRock
+   * @return the string representation of this PerRock
+   */
   @Override
   public String toString(){
     return name + " the PetRock!";
