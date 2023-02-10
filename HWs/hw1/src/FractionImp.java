@@ -106,11 +106,19 @@ public class FractionImp implements Fraction{
                                                   this.getDenominator()/gcd);
   }
 
+  /**
+   * Computes and returns the scientific value (decimal) of the fraction.
+   * @return the decimal value of fraction
+   */
   @Override
   public double toDouble() {
     return this.getDecimalRep();
   }
 
+  /**
+   * Computes and returns the reciprocal of the fraction.
+   * @return the reciprocal of the fraction.
+   * */
   @Override
   public String reciprocal() {
     // check if numerator is 0
@@ -124,6 +132,11 @@ public class FractionImp implements Fraction{
     return reciprocal.toString();
   }
 
+  /**
+   * Add this Fraction to the one passed to it and returns the result as a Fraction
+   * @param other the other Fraction to add to this Fraction
+   * @return the resized Shape
+   * */
   @Override
   public String add(FractionImp other) {
     int newNum = (this.getNumerator() * other.getDenominator())
