@@ -1,7 +1,7 @@
 /**
  * This class represents an AbstractChessPiece.
  * It implements the ChessPiece interface.
- * It contains implementation details of
+ * It contains implementation details
  */
 
 public abstract class AbstractChessPiece implements ChessPiece{

@@ -35,6 +35,17 @@ public class Pawn extends AbstractChessPiece{
   }
 
   /**
+   * Updated canMove method - takes into account if move is blocked
+   * @param moveRow the row of the given cell to check possible move
+   * @param moveCol the column of the given cell to check possible move
+   * @return true if the ChessPiece can move to the given cell, false otherwise
+   */
+  @Override
+  public boolean canMoveV2(int moveRow, int moveCol) {
+    return false;
+  }
+
+  /**
    * Helper method for canKill method of this Pawn
    * Checks if this Pawn can move diagonally to the given cell row and col
    * @param row the given cell row to check

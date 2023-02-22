@@ -38,4 +38,11 @@ public interface ChessPiece {
    * */
   boolean canKill(ChessPiece piece);
 
+  /**
+   * Updated canMove method - takes into account if move is blocked
+   * @param moveRow the row of the given cell to check possible move
+   * @param moveCol the column of the given cell to check possible move
+   * @return true if the ChessPiece can move to the given cell, false otherwise
+   */
+  boolean canMoveV2(int moveRow, int moveCol);
 }

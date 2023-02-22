@@ -31,4 +31,16 @@ public class Queen extends AbstractChessPiece{
     // check if piece can move horizontal or vertical or diagonal
     return canMoveHorizontal(row) || canMoveVertical(col) || canMoveDiagonal(row, col);
   }
+
+  /**
+   * Updated canMove method - takes into account if move is blocked
+   *
+   * @param moveRow the row of the given cell to check possible move
+   * @param moveCol the column of the given cell to check possible move
+   * @return true if the ChessPiece can move to the given cell, false otherwise
+   */
+  @Override
+  public boolean canMoveV2(int moveRow, int moveCol) {
+    return false;
+  }
 }

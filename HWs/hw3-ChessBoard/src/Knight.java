@@ -33,4 +33,15 @@ public class Knight extends AbstractChessPiece{
     int colDifference = Math.abs(this.getColumn() - col);
     return (rowDifference == 2 && colDifference == 1) || (rowDifference == 1 && colDifference == 2);
   }
+
+  /**
+   * Updated canMove method - takes into account if move is blocked
+   * @param moveRow the row of the given cell to check possible move
+   * @param moveCol the column of the given cell to check possible move
+   * @return true if the ChessPiece can move to the given cell, false otherwise
+   */
+  @Override
+  public boolean canMoveV2(int moveRow, int moveCol) {
+    return false;
+  }
 }
