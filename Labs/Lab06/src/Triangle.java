@@ -22,6 +22,10 @@ public class Triangle extends AbstractShape{
     this.p2 = p2;
   }
 
+  public double getRefX() {
+    return reference.getX();
+  }
+
 
   /**
    * Computes and returns the area of this shape.
