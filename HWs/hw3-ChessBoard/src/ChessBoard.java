@@ -14,13 +14,6 @@ public interface ChessBoard {
    */
   ChessPiece getChessPieceAt(int row, int col);
 
-//  /**
-//   *
-//   * @param row
-//   * @param col
-//   * @param piece
-//   */
-//  void setChessPieceAt(int row, int col, ChessPiece piece);
 
   /**
    *

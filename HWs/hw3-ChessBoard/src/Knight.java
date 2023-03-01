@@ -41,7 +41,10 @@ public class Knight extends AbstractChessPiece{
    * @return true if the ChessPiece can move to the given cell, false otherwise
    */
   @Override
-  public boolean canMoveV2(int moveRow, int moveCol) {
-    return false;
+  public boolean canMoveV2(ChessBoard board, int moveRow, int moveCol) {
+
+    // if the piece can't move to the new cell return false
+    return this.canMove(moveRow, moveCol);
+
   }
 }

@@ -9,23 +9,24 @@ import java.util.*;
 public class ChessBoardImp implements ChessBoard{
   // instance variables
   private List<List<ChessPiece>> board;
-  // create variable to represent the maximum number of rows and cols
-  private final int boardDimension = 8;
   // create a representation of EMPTY - to help us return EMPTY when no piece on cell
-  private final ChessPiece emptyCell = null;
+//  private final ChessPiece emptyCell = null;
 
   /**
    * Default constructor to create an empty board
+   * default board dimensions = 8 by 8
    */
   public ChessBoardImp() {
     // create all the rows of the board
+    // create variable to represent the maximum number of rows and cols
+    int boardDimension = 8;
     this.board = new ArrayList<>(boardDimension);
     // for each row in the board - create all the columns and assign each cell to empty
     for (int k = 0; k < boardDimension; k++) {
       List<ChessPiece> newCol = new ArrayList<>(boardDimension);
       // for each cell in the column - add empty ChessPiece
       for (int c = 0; c< boardDimension; c++) {
-        newCol.add(c, emptyCell);
+        newCol.add(c, null);
       }
       // once done adding the cells, add the whole column
       board.add(k, newCol);
@@ -42,10 +43,11 @@ public class ChessBoardImp implements ChessBoard{
   }
 
   /**
-   * Method to get a ChessPiece at a specific location
-   * @param row
-   * @param col
-   * @return
+   * Getter to return the piece at a given position,
+   * or "EMPTY" if there is no piece at that position.
+   * @param row the row of position cell
+   * @param col the column  of position cell
+   * @return piece or empty
    */
   @Override
   public ChessPiece getChessPieceAt(int row, int col) {
@@ -53,11 +55,12 @@ public class ChessBoardImp implements ChessBoard{
   }
 
   /**
-   *
-   * @param startRow
-   * @param moveRow
-   * @param startCol
-   * @param moveCol
+   * Method to move a piece from start cell to end cell
+   * @param startRow row of start cell
+   * @param moveRow row of end cell
+   * @param startCol col of start cell
+   * @param moveCol col of end cell
+   * Does not return anything
    */
   @Override
   public void moveChessPiece(int startRow, int moveRow, int startCol, int moveCol) {
@@ -68,11 +71,19 @@ public class ChessBoardImp implements ChessBoard{
       throw new IllegalArgumentException("No piece here!");
     }
     // check if the piece can move to the new location
-    if (movePiece.canMoveV2(moveRow, moveCol)) {
+    if (movePiece.canMoveV2(this, moveRow, moveCol)) {
       // move piece
       board.get(moveRow).set(moveCol, movePiece);
       // update previous position to null
-      board.get(startRow).set(startCol, emptyCell);
+      board.get(startRow).set(startCol, null);
+      // update row and col of moved piece
+      movePiece.setRow(moveRow);
+      movePiece.setCol(moveCol);
     }
   }
+
+  public List<List<ChessPiece>> getBoard() {
+    return this.board;
+  }
+
 }

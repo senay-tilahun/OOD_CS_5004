@@ -40,7 +40,12 @@ public class Queen extends AbstractChessPiece{
    * @return true if the ChessPiece can move to the given cell, false otherwise
    */
   @Override
-  public boolean canMoveV2(int moveRow, int moveCol) {
-    return false;
+  public boolean canMoveV2(ChessBoard board, int moveRow, int moveCol) {
+    if (!this.canMove(moveRow, moveCol)) { return false;}
+    //
+    boolean one = pieceExistsStraight(board, moveRow, this.getColumn(), moveCol);
+    boolean two = pieceExistsStraight(board, moveCol, this.getRow(), moveRow);
+    boolean three = pieceExistsDiag(board, this.getRow(), moveRow, this.getColumn(), moveCol);
+    return one || two || three;
   }
 }

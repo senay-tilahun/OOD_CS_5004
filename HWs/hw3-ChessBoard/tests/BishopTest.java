@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class BishopTest {
 
-//  declare to ChessPieces
+//  declare two ChessPieces
   ChessPiece bishop1;
   ChessPiece bishop2;
 

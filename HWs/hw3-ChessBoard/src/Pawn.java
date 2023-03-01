@@ -34,16 +34,6 @@ public class Pawn extends AbstractChessPiece{
     return false;
   }
 
-  /**
-   * Updated canMove method - takes into account if move is blocked
-   * @param moveRow the row of the given cell to check possible move
-   * @param moveCol the column of the given cell to check possible move
-   * @return true if the ChessPiece can move to the given cell, false otherwise
-   */
-  @Override
-  public boolean canMoveV2(int moveRow, int moveCol) {
-    return false;
-  }
 
   /**
    * Helper method for canKill method of this Pawn
@@ -83,6 +73,24 @@ public class Pawn extends AbstractChessPiece{
       case BLACK -> (this.getRow() - 1 == row && this.getColumn() == col);
       case WHITE -> (this.getRow() + 1 == row && this.getColumn() == col);
     };
+  }
 
+  /**
+   * Updated canMove method - takes into account if move is blocked
+   * @param moveRow the row of the given cell to check possible move
+   * @param moveCol the column of the given cell to check possible move
+   * @return true if the ChessPiece can move to the given cell, false otherwise
+   */
+  @Override
+  public boolean canMoveV2(ChessBoard board, int moveRow, int moveCol) {
+    if (!this.canMove(moveRow, moveCol)) {
+      return false;
+    }
+    if (this.getColor() == Color.BLACK &&
+        board.getChessPieceAt(this.getRow() - 1, moveCol) != null) {
+      return false;
+    } else
+      return this.getColor() != Color.WHITE ||
+          board.getChessPieceAt(this.getRow() + 1, moveCol) == null;
   }
 }

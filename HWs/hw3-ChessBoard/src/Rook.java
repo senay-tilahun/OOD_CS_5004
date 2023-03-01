@@ -39,7 +39,16 @@ public class Rook extends AbstractChessPiece{
    * @return true if the ChessPiece can move to the given cell, false otherwise
    */
   @Override
-  public boolean canMoveV2(int moveRow, int moveCol) {
-    return false;
+  public boolean canMoveV2(ChessBoard board, int moveRow, int moveCol) {
+    // if the piece can't move to the new cell return false
+    if (!this.canMove(moveRow, moveCol)) { return false;}
+
+    // check if move is horizontal or vertical
+    if (Math.abs(this.getRow() - moveRow) == 1) {
+      // horizontal movement - row is constant
+      return !this.pieceExistsStraight(board, moveRow, this.getColumn(), moveCol);
+    }
+    // else vertical move
+    return !this.pieceExistsStraight(board, moveCol, this.getRow(), moveRow);
   }
 }

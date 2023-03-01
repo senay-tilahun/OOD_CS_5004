@@ -40,7 +40,11 @@ public class Bishop extends AbstractChessPiece {
    * @return true if the ChessPiece can move to the given cell, false otherwise
    */
   @Override
-  public boolean canMoveV2(int moveRow, int moveCol) {
-    return false;
+  public boolean canMoveV2(ChessBoard board, int moveRow, int moveCol) {
+    // if the piece can't move to the new cell return false
+    if (!this.canMove(moveRow, moveCol)) { return false;}
+
+    return !this.pieceExistsDiag(board, this.getRow(), moveRow, this.getColumn(), moveCol);
   }
+
 }

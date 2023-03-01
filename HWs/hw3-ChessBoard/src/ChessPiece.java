@@ -4,6 +4,19 @@
  * This interface contains all protocols for concrete Chess Pieces.
  * */
 public interface ChessPiece {
+
+  /**
+   * Setter method for row
+   * @param row the new row
+   */
+  public void setRow(int row);
+
+  /**
+   * Setter method for col
+   * @param col the new col
+   */
+  public void setCol(int col);
+
   /**
    * Returns the current row of the ChessPiece on the board.
    * @return the current row of the ChessPiece
@@ -44,5 +57,5 @@ public interface ChessPiece {
    * @param moveCol the column of the given cell to check possible move
    * @return true if the ChessPiece can move to the given cell, false otherwise
    */
-  boolean canMoveV2(int moveRow, int moveCol);
+  boolean canMoveV2(ChessBoard board, int moveRow, int moveCol);
 }

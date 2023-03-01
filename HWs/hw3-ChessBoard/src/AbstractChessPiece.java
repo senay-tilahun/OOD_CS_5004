@@ -22,6 +22,24 @@ public abstract class AbstractChessPiece implements ChessPiece{
   }
 
   /**
+   * Setter method for row
+   * @param row the new row
+   */
+  @Override
+  public void setRow(int row) {
+    this.row = row;
+  }
+
+  /**
+   * Setter method for col
+   * @param col the new col
+   */
+  @Override
+  public void setCol(int col) {
+    this.column = col;
+  }
+
+  /**
    * Returns the current row of the ChessPiece on the board.
    * @return the current row of the ChessPiece
    */
@@ -112,4 +130,71 @@ public abstract class AbstractChessPiece implements ChessPiece{
     // check if this piece and the given cell have the same column
     return this.getColumn() == col;
   }
+
+  /**
+   * Helper method to check if there is any piece diagonally from a start cell to end cell
+   * @param board the chess board to check
+   * @param fromRow the start cell row
+   * @param toRow the end cell row
+   * @param fromCol the start cell col
+   * @param toCol the end cell col
+   * @return true if there is a piece, false otherwise
+   */
+  public boolean pieceExistsDiag(ChessBoard board, int fromRow, int toRow, int fromCol, int toCol){
+    // first check which direction the diagonal is
+    int rowDir;
+    int colDir;
+    if (toRow - fromRow > 0) {
+      rowDir = 1;
+    } else {
+      rowDir = -1;
+    }
+    int r = fromRow + rowDir;
+
+    if (toCol - fromCol > 0) {
+      colDir = 1;
+    } else {
+      colDir = -1;
+    }
+
+    int c = fromCol + colDir;
+
+    // check if there is a piece in those directions, until we fet to our destination
+    while (r != toRow && c != toCol) {
+      // check the board at r, c and see if there is a chesspiece
+      if (board.getChessPieceAt(r, c) != null) {
+        return true;
+      }
+      // increment current row and col to check
+      r += rowDir;
+      c += colDir;
+    }
+  // if we leave the loop and can't find a piece, return false
+    return false;
+  }
+
+  /**
+   * Helper method to check if there is any piece
+   * horizontally or vertically from a start cell to end cell
+   * @param board the chess board to check
+   * @param constant the row (horizontal move) /col (vertical move) that remains constant
+   * @param from the start cell variable coordinate
+   * @param to the end cell variable coordinate
+   * @return true if there is a piece, false otherwise
+   */
+  public boolean pieceExistsStraight(ChessBoard board, int constant, int from, int to) {
+    // define the begin and end columns to check
+    int begin = Math.min(from, to);
+    int end = Math.max(from, to);
+    // iterate from begin to end and check
+    for (int i= begin; i < end; i++) {
+      if (board.getChessPieceAt(row, i) != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+
 }
