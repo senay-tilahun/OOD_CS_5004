@@ -77,7 +77,7 @@ public class BookTest {
 
   // FLAW: we don't have test to verify that overridden equals method works as expected
   // FIX: add test and verify overridden equals method
-  //
+  // FIXED
 
   /**
    * Verify that overridden hashCode returns same int for equal Book

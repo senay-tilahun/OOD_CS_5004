@@ -31,6 +31,7 @@ public class MagazineTest {
 
   // FLAW: No unittest to verify that the getMonth method in Magazine class is working
   // FIX: add unittest with java docs to verify that
+  // FIXED
 
   /**
    * Verify that getMonth returns Magazine's month as constructed
