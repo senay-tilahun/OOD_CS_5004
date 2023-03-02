@@ -1,0 +1,99 @@
+CS5004 SF Spring 2023
+Instructions
+
+This exam is open book, open computer, open notes. However, academic
+integrity is paramount. Please do not copy/paste code from the
+Internet. Please do not ask chatGPT or similar systems for
+help. Please do not discuss the exam with anyone. Your reputation for
+academic integrity is far more important than your grade on this exam.
+
+There will be a hard stop at 3:00 PM. You should stop work at least 5
+minute before and focus on submitting. You have a choice: either
+directly upload your materials to Canvas (as a zip file), or push your
+code to Github and submit the URL. Either is fine. Please do not
+submit late, not even by a minute!
+
+Download the compressed folder, containing a project called
+Publications. Unzip it and put the contents into a single folder,
+within whatever folder you use to store Java projects. (It might be
+prudent to also save a complete copy in a separate folder.)
+
+Launch IntelliJ and use the "New Project from Eexisting Ssources"
+feature to bring your working copy in for editing. You should see an
+src folder with source code, a tst folder, with tests, and a javadocs
+folder, with html-formatted documentation.
+
+You are starting from a deliberately flawed version of a project to
+manage a Library of Publications. Take a few minutes to read and
+understand the code before starting to make changes. Do the files
+compile? Do the tests pass?
+
+You are at liberty to make changes to the files, but try not to modify
+the intended functionality.
+
+Your goal is to find and fix 10 flaws in the project. Each is worth up to
+10 points, for a total possible of 100 points. When you find a flaw,
+enter the following, comment nearby in the same file:
+ 
+   // FLAW: followed by a 1-line summary of the flaw
+   You may report up to 10 flaws, for 4 points each.
+
+You may earn up to 3 additional points per flaw by describing your
+approach to fix the flaw. Add a comment like this, nearby in the same
+file:
+
+   // FIX: followed by a 1-line summary of how you would fix
+
+Some fixes are short -- just a few lines of code or less. Others may
+involve moving code around or writing missing code. Use your time
+wisely.
+
+Finally, you may earn up to an additional 3 points per flaw by
+actually fixing the flaw, depending on correctness. Mark your
+correction with another comment:
+
+   // FIXED
+
+There are more than 10 flaws; but there will be no extra credit for
+finding or fixing more than 10. Any 10 will do.
+
+Be careful to only report flaws that were there originally, not caused
+by your own edits!
+
+Here are the SORTS of flaws to look for (not all may be present):
+      A. Absence of Javadocs or insufficient/inaccurate Javadocs
+      B. Absence of Tests or insufficient testing
+         Each assertion will be treated as a test
+         Methods should have at least 2 tests
+      C. There are tests, but they fail (bug in test or in code being tested)
+      D. Important methods are missing or merely "stubbed out"
+         Examples: not all methods tested; no equals; equals but no hashCode;
+	       leaving out methods required by an Interface
+      E. Needlessly repetitive or nearly repetitive code (counts as 1 flaw)
+      F. Code does not compile
+      G. Other IntelliJ warnings/errors
+      H. Poor style, such as ignoring camelCase or unreadable indentation
+      I. Equals method that violates reflexive, symmetric, or transitive
+      J. Equals method that violates hashCode contract
+
+The following are safe to ignore, for the purposes of this exam:
+
+    - Although it is important to write Javadocs in your code, you are
+      not expected to Generate a Javadocs folder for this exam
+
+    - Methods implemented and tested in a parent or abstract class may be
+      tested there (so long as all the subClasses are tested) OR in
+      the individual subClasses
+
+    - Your equality method neglected to check for null (though it really should)
+
+    - It is OK to use the Objects.hash (easy) approach to writing a hashCode
+      method, or write your own (if is sound)
+
+    - It is not required to write tests for an Enum class
+
+    - You may leave commented-out code in your files without penalty
+
+    - Small bits of repetitive code in Constructors may be ignored
+
+    - Warnings from "Generate Javadocs" (suggest not bothering with that now)
