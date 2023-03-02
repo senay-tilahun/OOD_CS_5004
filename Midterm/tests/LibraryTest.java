@@ -115,6 +115,7 @@ public class LibraryTest {
 
   // FLAW: this unittest is not testing the sortLibrary method, but the toString method
   // FIX: update the test to test and verify the sortLibrary method of Library class
+  // FIXED
 
   @Test
   public void testSortLibrary() {
