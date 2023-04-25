@@ -1,33 +1,81 @@
 package gitlet;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Formatter;
+import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import jdk.jshell.execution.Util;
+
+
 /**
- * This class represents a Validation class.
- * This will be used to validate different conditions for various class
- *  Main class validation
- *    check if user args are valid
- *  Command class validation
- *    init - validate if repo as been initialized
- *    add -
- *      check if file being added exists in working directory
- *      if file exists - is file valid for addition
- *        is file in current commit?
- *        are file contents different from one present in current commit.
- *    commit -
- *      validate if commit is possible
- *        is staging area empty?
- *        do we have a commit message?
- *
+ * Utility class used to validate various inputs throughout gitlet implementation
  */
-class Valid {
+public class Valid {
 
-  // TODO: Main class validation - user args are valid
+  /**
+   * Validates the number of user arguments is as expected for the given command
+   * @param ops
+   * @param expected
+   * @param name
+   * @throws RuntimeException if number of args do not match expected
+   */
+  public static void validateUserArgNum(String[] ops, int expected, String name){
+    if (name.equals("commit")){
+      if (ops.length != expected){
+        // TODO - refactor Utils part here
+        Utils.exitWithError("Please enter a commit message.");
+      }
+    }
 
-  // TODO: init command - validate repo doesn't already exist in current repo
+    if (ops.length != expected){
+      throw new RuntimeException("Incorrect number of operands for command chosen.");
+    }
+  }
 
-  // TODO: add command -
-  //    if file in directory, is file valid for addition
+  /**
+   * Method to check if repo already exists
+   */
+  public static void repoAlreadyExists(){
+    // check if we have already created a repo
+    boolean repoExists = Utils.join(".gitlet").exists();
 
-  // TODO: commit command - validate if commit is possible
-  //    staging area not empty and commit message exists
+    if (repoExists) {
+      // exist with error message
+      Utils.exitWithError("A version control repo already exists in directory.");
+    }
+  }
+
+  /**
+   * Method to validate that a file exists in the working directory
+   * @param filename
+   */
+  public static void fileExistsInDir(String filename){
+    boolean fileExists = Utils.join(filename).exists();
+    if(!fileExists){
+      Utils.exitWithError("File does not exist in current directory");
+    }
+  }
+
+  public static void invalidCommand(String message){
+    System.out.println(message);
+    System.exit(0);
+  }
 
 }

@@ -1,16 +1,24 @@
 package gitlet;
 
-/**
- * Main method, has one main method
- * used to validate user args
- * based on user args will perform different function of gitlet
- * Acts as Controller in the MVC architecture
+/** Driver class for Gitlet, the tiny stupid version-control system.
+ *  @author
  */
 public class Main {
 
-  public static void main(String[] args) {
-    // TODO - check that the args are valid i.e run Valid.args from Valid class
+    // TODO: Update java docs
+    /** Usage: java gitlet.Main ARGS, where ARGS contains
+     *  <COMMAND> <OPERAND> .... */
+    // TODO: Update this method to use Valid class -
+    //      create valid class and add all Utils validation methods there
+    public static void main(String[] args) {
+        if (args.length == 0) {
+           Utils.exitWithError("Please enter a command.");
+        }
 
-    // TODO - Switch statement for specific args
-  }
+        UserCommand command = new UserCommand();
+        command.parseUserCommand(args);
+
+        return;
+    }
+
 }
