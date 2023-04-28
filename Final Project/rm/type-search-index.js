@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"gitlet","l":"Command"},{"p":"gitlet","l":"Gitfile"},{"p":"gitlet","l":"Gitindex"},{"p":"gitlet","l":"Main"},{"p":"gitlet","l":"Objects"}];updateSearchResults();
