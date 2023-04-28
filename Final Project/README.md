@@ -1,13 +1,13 @@
-**Gitlet** 
+# **Gitlet** 
 
 A version control system that mimics some basic features of git 
 
-**Key Ideas**
+### **Key Ideas**
 
 Commit is a snapshot of entire project at a time
 Commit tree is immutable 
 
-**Run on command line** 
+### **Run on command line** 
 
     javac gitlet/*.java
 
@@ -17,13 +17,14 @@ Currently supported: init, add, commit, log,
 Coming soon: status, rm, branch, merge
 
 --
-**Internal Structures** 
+
+### **Internal Structures** 
     
     blobs 
     Commits  
 
 ---
-**Reflections**
+### **Reflections**
 
     Importance of Design process ->    
     In the future, I want to spend more time upfront on the design so the project flows better
@@ -43,7 +44,7 @@ Coming soon: status, rm, branch, merge
 
 ---
 
-**OOP Ideas used**
+### **OOP Ideas used**
 
     Encapsulation
     
