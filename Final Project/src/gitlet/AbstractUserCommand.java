@@ -1,10 +1,9 @@
 package gitlet;
 
-// TODO: java docs
 /**
- *
+ * Abstract Class meant for future iterations, when more user commands are added
  */
-public abstract class AbstractUserCommand {
+public abstract class AbstractUserCommand implements UserCommandInt{
   // instance variables for user command and operands
   protected final String userCommand;
   protected final String[] ops;

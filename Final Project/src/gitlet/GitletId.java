@@ -3,15 +3,18 @@ package gitlet;
 
 import java.util.*;
 
+/**
+ * Class to represent a Gitlet ID with file name combination
+ */
 public class GitletId implements GitSerialize {
     private final String name;
     public String id;
 
 
     /**
-     *
-     * @param id
-     * @param name
+     * Constructor of a GitletId
+     * @param id id
+     * @param name filename
      */
     public GitletId(String id, String name) {
         this.name = name;
@@ -19,13 +22,24 @@ public class GitletId implements GitSerialize {
         this.id = id;
     }
 
+    /**
+     * Getter of id
+     * @return id
+     */
     public String getId() {
         return this.id;
     }
 
+    /**
+     * Getter of name
+     * @return filename
+     */
     public String getName() { return this.name; }
 
-
+    /**
+     * Override hashCode to compare different GitletIDs
+     * @return int hashcode
+     */
     @Override
     public int hashCode() {
         int result = 17;
@@ -34,6 +48,11 @@ public class GitletId implements GitSerialize {
         return result;
     }
 
+    /**
+     * Override equals method
+     * @param obj other object
+     * @return true or false, depending on comparison
+     */
     @Override
     public boolean equals(Object obj) {
         if (obj == this) {

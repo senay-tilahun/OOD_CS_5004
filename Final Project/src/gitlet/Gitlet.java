@@ -7,22 +7,26 @@ import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 
 import static gitlet.GitletFileManage.*;
 
-//TODO: class GitLet
-public class GitLet {
+/**
+ * Main class that handles execution of the different gitlet commands
+ * init, add, commit, log
+ */
+public class Gitlet {
 
     /**
-     * Method for init command init
+     * Method for command init
      * Creates the .gitlet directory
      * Creates the initial commit - commit 0
      * set up folders and set the zero commit
      */
-    void init() throws IOException {
+    void init() throws IOException, NoSuchAlgorithmException {
 //        GitletFileCommand.initializeRepo();
         // Initialize .gitlet folder and sub-folders
         gitletObjects.mkdirs();
@@ -43,7 +47,7 @@ public class GitLet {
             System.out.println("IOException while writing object to file .gitlet/index");
             e.printStackTrace();
         }
-        Utils.writeObject(gitletIndRM, index);
+        Utility.writeObject(gitletIndRM, index);
         // catch exception
         GitletObjects fileList = new GitletObjects(true);
         try (ObjectOutputStream out = new ObjectOutputStream(
@@ -53,20 +57,20 @@ public class GitLet {
             System.out.println("IOException while writing object to file .gitlet/index");
             e.printStackTrace();
         }
-        Utils.writeObject(gitletInd, fileList);
-        Utils.writeContents(gitletHead, "master");
+        Utility.writeObject(gitletInd, fileList);
+        Utility.writeContentsToFile(gitletHead, "master");
         GitletObjects commit0 = new GitletObjects();
         // TODO: update this method in GitletFileCommand & Utils
         GitletFileCommand.writeGitletCommitObject(commit0);
     }
 
     /**
-     * add [filename]
-     * add the file to the staging area
-     *
-     * @param fileToAdd filename of the new file to be added
+     * Method for add command
+     * @param fileToAdd file to add to staging area
+     * @throws IOException if file I?O issues
+     * @throws NoSuchAlgorithmException if algo not found
      */
-    void add(String fileToAdd) throws IOException {
+    void add(String fileToAdd) throws IOException, NoSuchAlgorithmException {
         //staging area is the Tree class under Objects and corresponding index file
         //first read the file content and make a gitletBlob
         File newFile = Paths.get(fileToAdd).toFile();
@@ -80,9 +84,12 @@ public class GitLet {
     }
 
     /**
-     * commit all files in the staging area
+     * Method for commit command
+     * @param msg the log message of the commit
+     * @throws IOException if file I?O issues
+     * @throws NoSuchAlgorithmException if algo not found
      */
-    void commit(String msg) throws IOException {
+    void commit(String msg) throws IOException, NoSuchAlgorithmException {
         GitletObjects stageAddChanges = GitletFileCommand.readAddedStageEntries();
         GitletObjects stageRmChanges = GitletFileCommand.readRemovedStageRemovals();
         if (stageAddChanges.staging.isEmpty() && stageRmChanges.staging.isEmpty()) {
@@ -97,11 +104,12 @@ public class GitLet {
     }
 
     /**
-     * Helper Method for commit method
-     * @param commitHead
-     * @param message
+     * Helper method to create new commit
+     * @param commitHead current head of the commit tree
+     * @param message commit message
+     * @throws IOException if file i/o issues
      */
-    private void createNewCommit(GitletObjects commitHead, String message) {
+    private void createNewCommit(GitletObjects commitHead, String message) throws IOException {
         GitletCommit commit = (GitletCommit) commitHead;
         commit.setType("commit");
         commit.setMessage(message);
@@ -113,32 +121,34 @@ public class GitLet {
     }
 
     /**
-     * Helper method for commit method
+     *
      * @param newCommit
      * @throws IOException
+     * @throws NoSuchAlgorithmException
      */
-    private void writeCommitObject(GitletObjects newCommit) throws IOException {
+    private void writeCommitObject(GitletObjects newCommit)
+        throws IOException, NoSuchAlgorithmException {
         GitletFileCommand.writeGitletCommitObject(newCommit);
     }
 
     /**
-     * Helper method for commit method
-     * @param stageEntries
-     * @param stageRm
-     * @throws IOException
+     * Helper method for commit method, clears staging area after commit is made
+     * @param added added items to stage
+     * @param removed removed items from stage
+     * @throws IOException i/o issues
      */
-    // TODO - need to change this method - same as original
-    private void clearStageEntries(GitletObjects stageEntries, GitletObjects stageRm) throws IOException {
-        stageEntries.staging.clear();
-        stageRm.staging.clear();
-        Utils.writeObject(gitletInd, stageEntries);
-        Utils.writeObject(gitletIndRM, stageRm);
+    private void clearStageEntries(GitletObjects added, GitletObjects removed) throws IOException {
+        GitletObjects.clearStage(added);
+        GitletObjects.clearStage(removed);
+        GitletObjects.writeStage(gitletInd, added);
+        GitletObjects.writeStage(gitletIndRM, removed);
     }
 
     /**
-     * Method to execute the log command
+     * Method for log command
+     * @throws IOException i/o issues
      */
-    void log() {
+    void log() throws IOException {
         //
         GitletCommit currentCommit = (GitletCommit) getCurrentCommitFromFile();
         StringBuilder commitContent = new StringBuilder();
@@ -147,57 +157,64 @@ public class GitLet {
         while (!currentCommit.getCommitParent().equals("")) {
             commitContent.append(singleParentCommitLog(currentCommit, commitName));
             commitName = currentCommit.getCommitParent();
-            currentCommit = (GitletCommit) Utils.readObject(GitletFileManage.convertGitletObjectToFile(currentCommit.getCommitParent()), GitletObjects.class);
+            currentCommit = (GitletCommit) Utility.readObjectFromFile(GitletFileManage.convertGitletObjectToFile(currentCommit.getCommitParent()), GitletObjects.class);
         }
         commitContent.append(finalLog(currentCommit, commitName));
         System.out.println(commitContent);
     }
 
     /**
-     * Helper for log
-     * @return
+     * Helper for log, gets current commit from file
+     * @return the current commit
      */
-    public static GitletObjects getCurrentCommitFromFile() {
+    public static GitletObjects getCurrentCommitFromFile() throws IOException {
         // TODO - update GitletFileManage.getCurrentGitletHead() method
-        String commitHash = getCurrentCommitHash();
-        return Utils.readObject(GitletFileManage.convertGitletObjectToFile(commitHash), GitletObjects.class);
+        String commitHash = getCurrentCommitId();
+        return Utility.readObjectFromFile(GitletFileManage.convertGitletObjectToFile(commitHash), GitletObjects.class);
     }
 
     /**
-     * Helper for log
-     * @return
+     * Helper for log, gets the current commit
+     * @return the current commit id
      */
-    public static String getCurrentCommitHash() {
+    public static String getCurrentCommitId() throws IOException {
         String headFilePath = getHeadFilePath();
-        String headContents = Utils.readContentsAsString(new File(headFilePath));
+        File filename = new File(headFilePath);
+        // check if filename is a file
+        if (!filename.isFile()){
+            throw new IllegalStateException("Please make sure it is a normal filename");
+        }
+        byte[] byteArr = Files.readAllBytes(filename.toPath());
+        String headContents = new String(byteArr, StandardCharsets.UTF_8);
         return headContents.trim();
     }
 
     /**
-     * Helper for log
-     * @return
+     * Helper for log, gets the head file path
+     * @return head file path
      */
     public static String getHeadFilePath() {
         return gitletHead.getPath();
     }
 
     /**
-     * Helper for log
-     * @return
+     * Helper for log, single parent commit log
+     * @return single parent commit log
      */
-    private static String singleParentCommitLog(GitletObjects commit, String currName) {
+    private static String singleParentCommitLog(GitletObjects commit, String comName) {
         GitletCommit com = (GitletCommit) commit;
-        return "=== \n" + "commit " + currName + "\n"
+        return "=== \n" + "commit " + comName + "\n"
             + "Date: " + com.getDateTime() + "\n"
             + com.getMessage() + "\n\n";
     }
 
     /**
-     * Helper for log
-     * @return
+     *
+     * Helper for log, gets final Log
+     * @return final log
      */
-    private static String finalLog(GitletObjects curr, String currName) {
-        return singleParentCommitLog(curr, currName);
+    private static String finalLog(GitletObjects com, String comName) {
+        return singleParentCommitLog(com, comName);
     }
 
 }

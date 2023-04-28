@@ -1,25 +1,38 @@
 package gitlet;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
- * TODO Add Java docs
+ * Main class - driver, contains methods to check and validate user commands
  */
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    /**
+     * Main method - gets user args and checks if valud
+     * @param args user args from terminal
+     * @throws IOException if can't read
+     */
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         if (args.length == 0) {
-           Utils.exitWithError("Please enter a command.");
+            System.out.println("Please enter a command.");
+            System.exit(0);
         }
         parseUserCommand(args);
 
     }
-    public static void parseUserCommand(String[] args) throws IOException {
+
+    /**
+     *  Method to parse user arguments from command line and execute correct command
+     * @param args user arguments from command line
+     *  @throws IOException if can't read
+     */
+    public static void parseUserCommand(String[] args)throws IOException, NoSuchAlgorithmException {
         // assign the first element on args to user command
         String name = args[0];
         String[] ops = Arrays.copyOfRange(args, 0, args.length);
-        GitLet gitlet = new GitLet();
+        Gitlet gitlet = new Gitlet();
 
         // check what the user command is
         if (name.equals("init")) {

@@ -6,13 +6,13 @@ import java.io.File;
 public class GitletFileObjects extends GitletFileManage {
 
   /**
-   * replace/create cwd file with the repo version with the given blobHash
-   * @param cwdNew cwd file to be written
-   * @param blobHash hash of the blob in the repo
+   * Method to update repo file
+   * @param PWD present working directory
+   * @param blobId id of blob
    */
-  static void updateRepoFile(File cwdNew, String blobHash) {
-    File repo = GitletFileManage.convertGitletObjectToFile(blobHash);
-    String content = ((GitletBlob)Utils.readObject(repo, GitletObjects.class)).getContent();
-    Utils.writeContents(cwdNew, content);
+  static void updateRepoFile(File PWD, String blobId) {
+    File repo = GitletFileManage.convertGitletObjectToFile(blobId);
+    String content = ((GitletBlob) Utility.readObjectFromFile(repo, GitletObjects.class)).getContent();
+    Utility.writeContentsToFile(PWD, content);
   }
 }

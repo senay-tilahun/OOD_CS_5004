@@ -1,9 +1,14 @@
 package gitlet;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
 
+/**
+ * Class to aid in main gitlet file management
+ */
 public class GitletFileManage {
     // TODO - check this with Nati
     // initialize / create paths
@@ -16,44 +21,59 @@ public class GitletFileManage {
     public static File gitletHead = gitPaths.getGitletHead();
 
 
+    /**
+     * Method to get current head
+     * @return current head
+     * @throws IOException i/o issues
+     */
+    static String getCurrentGitletHead() throws IOException {
+        String headCommit;
+        // check if filename is a file
+        if (!gitletHead.isFile()){
+            throw new IllegalStateException("Please confirm filename");
+        }
+        byte[] byteArr = Files.readAllBytes(gitletHead.toPath());
+        String temp = new String(byteArr, StandardCharsets.UTF_8);;
+        headCommit = temp.trim();
+
+        File branchHead = Paths.get(gitletLocalHead.getPath(), headCommit).toFile();
+
+        //
+        if (!branchHead.isFile()){
+            throw new IllegalStateException("Please confirm filename");
+        }
+        byte[] byteArr2 = Files.readAllBytes(branchHead.toPath());
+
+        return new String(byteArr2, StandardCharsets.UTF_8);
+    }
+
 
     /**
-     * get current HEAD commit hash as a string
-     *
-     * @return hash of the current commit/HEAD
+     * Method to convert gitlet object to file
+     * @param id id of object
+     * @return file path of object
      */
-    static String getCurrentGitletHead() {
-        String curr = Utils.readContentsAsString(gitletHead);
-        File branchHead = Utils.join(gitletLocalHead, curr);
-        return Utils.readContentsAsString(branchHead);
+    static File convertGitletObjectToFile(String id) {
+        return Paths.get(gitletObjects.getPath(), getHHead(id), getHBody(id)).toFile();
     }
 
 
     /**
-     * Helper function to get a Blob/Commit object with hash
-     *
-     * @param hash hashcode of the Objects
-     * @return corresponding file, might not exist
+     * Getter of head, head
+     * @param id id
+     * @return head, head
      */
-    static File convertGitletObjectToFile(String hash) {
-        java.io.File file = Utils.join(gitletObjects, getHHead(hash), getHBody(hash));
-        return file;
+    static String getHHead(String id) {
+        return id.substring(0, 2);
     }
-
 
     /**
-     * Getter for hash code, used for naming things
-     *
-     * @return
+     * Getter of head body
+     * @param id id
+     * @return head body
      */
-    static String getHHead(String hash) {
-        return hash.substring(0, 2);
+    static String getHBody(String id) {
+        return id.substring(2);
     }
-
-    static String getHBody(String hash) {
-        return hash.substring(2);
-    }
-
-
-
 }
+

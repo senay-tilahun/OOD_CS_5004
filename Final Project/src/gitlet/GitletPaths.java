@@ -3,6 +3,9 @@ package gitlet;
 import java.io.File;
 import java.nio.file.Paths;
 
+/**
+ * Class to initialize all needed file paths for gitlet repo
+ */
 public class GitletPaths {
 
     static final File gitletObjects = Paths.get(".gitlet", "objects").toFile();
@@ -12,8 +15,7 @@ public class GitletPaths {
     static final File gitletHead = Paths.get(".gitlet", "HEAD").toFile();
 
   /**
-   * Constructor
-   *
+   * Getters for all file paths to utilize in different classes
    */
 
 

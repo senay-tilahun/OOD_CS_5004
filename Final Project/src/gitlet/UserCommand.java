@@ -9,9 +9,8 @@ import java.util.Arrays;
 public class UserCommand {
 
   /**
-   * Define our parsing method for the user command
+   * Class meant for future iterations, when more user commands are added
    */
-//  @Override
 
 }
 

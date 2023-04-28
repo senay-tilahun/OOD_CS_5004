@@ -5,6 +5,9 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * Class that represents a commit object
+ */
 public class GitletCommit extends GitletObjects{
   private String dateTime;
   private String type;
@@ -13,6 +16,11 @@ public class GitletCommit extends GitletObjects{
   public HashMap<String, GitletId> staging;
 
   // constructor for initial commit
+
+  /**
+   * Constructor for initial commit
+   * Sets the date, log message, parent, staging
+   */
   public GitletCommit(){
     this.type = "commit";
     this.message = "initial commit";
@@ -21,6 +29,10 @@ public class GitletCommit extends GitletObjects{
         DateTimeFormatter.ofPattern("EEE MMM d kk:mm:ss uuuu xxxx"));
     staging = new HashMap<>();
   }
+
+  /**
+   * Getter and Setter methods
+   */
 
   public String getDateTime() {
     return dateTime;
@@ -65,12 +77,20 @@ public class GitletCommit extends GitletObjects{
     this.parent = parent;
   }
 
+  /**
+   * Method to update added to stage
+   * @param added added changes
+   */
   public void updatedAddStaged(GitletCommit added){
     if (!added.staging.isEmpty()) {
       staging.putAll(added.staging);
     }
   }
 
+  /**
+   * Method to update removed to stage
+   * @param removed removed changes
+   */
   public void updateRemovedStaged(GitletCommit removed){
     staging.keySet().removeAll(removed.staging.keySet());
   }
