@@ -54,7 +54,7 @@ public class Valid {
 
   /**
    * Method to exectue an invalid command
-   * @param message output message
+   * @param message
    */
   public static void invalidCommand(String message){
     System.out.println(message);
