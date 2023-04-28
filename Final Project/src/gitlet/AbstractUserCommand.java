@@ -1,4 +1,4 @@
-package gitlet.userCommand;
+package gitlet;
 
 // TODO: java docs
 /**
@@ -17,14 +17,4 @@ public abstract class AbstractUserCommand {
     this.ops = ops;
   }
 
-  /**
-   * Method to execute user command
-   */
-  public abstract void execute();
-
-  public void validateUserArgNum(int expected){
-    if (ops.length != expected){
-      throw new RuntimeException("Incorrect number of operands.");
-    }
-  }
 }

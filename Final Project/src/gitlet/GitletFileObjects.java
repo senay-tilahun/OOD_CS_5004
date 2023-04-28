@@ -12,7 +12,7 @@ public class GitletFileObjects extends GitletFileManage {
    */
   static void updateRepoFile(File cwdNew, String blobHash) {
     File repo = GitletFileManage.convertGitletObjectToFile(blobHash);
-    String content = Utils.readObject(repo, GitletObjects.class).getContent();
+    String content = ((GitletBlob)Utils.readObject(repo, GitletObjects.class)).getContent();
     Utils.writeContents(cwdNew, content);
   }
 }
