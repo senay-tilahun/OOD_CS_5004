@@ -9,12 +9,11 @@ Commit tree is immutable
 
 ### **Run on command line** 
 
-    javac gitlet/*.java
-
-then run gitlet commands: 
-
-Currently supported: init, add, commit, log, 
-Coming soon: status, rm, branch, merge
+    Currently supported
+        init 
+        add [file]
+        commit "message"
+        log
 
 --
 
