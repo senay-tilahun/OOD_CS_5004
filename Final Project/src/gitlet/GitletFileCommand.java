@@ -20,13 +20,12 @@ public class GitletFileCommand extends GitletFileManage{
    * @throws IOException i/o issues
    */
   private static void gitletObjectToFile(GitletObjects gitObject, String ID) throws IOException {
-    File objectsDir = Paths.get(gitletObjects.getPath(), ID).toFile();
-    objectsDir.mkdir();
+    File dir = Paths.get(gitletObjects.getPath(), ID).toFile();
+    dir.mkdir();
     //
     String headH = ID.substring(0, 2);
     String headB = ID.substring(2);
     File file = Paths.get(gitletObjects.getPath(), headH, headB).toFile();
-    // TODO - update Utils method
     Utility.writeObject(file, gitObject);
   }
 
@@ -39,48 +38,21 @@ public class GitletFileCommand extends GitletFileManage{
    */
   static String writeGitletCommitObject(GitletObjects gitObj)
       throws IOException, NoSuchAlgorithmException {
-    // TODO: how do I update getId function in Utils
     String gitId = Utility.getId(gitObj);
     GitletCommit com = (GitletCommit) gitObj;
     // if the object is of commit type
     if (com.getGitletObjectType().equals("commit")) {
       byte[] temp = Files.readAllBytes(gitletHead.toPath());
-      String currBranch = new String(temp, StandardCharsets.UTF_8);
-      updateHeadPtr(currBranch);
+      String commitB = new String(temp, StandardCharsets.UTF_8);
+      Utility.writeContentsToFile(gitletHead, commitB);
       gitletObjectToFile(gitObj, gitId);
       return gitId;
     }
-    if (com.getGitletObjectType().equals("blob") && addStagedToIndex(gitId, gitObj.getWorkingDirectory())) {
+    if (com.getGitletObjectType().equals("blob") &&
+        addStaged(gitId, gitObj.getWorkingDirectory())) {
       gitletObjectToFile(gitObj, gitId);
     }
     return gitId;
-  }
-
-
-  /**
-   * Method to update the head pointer
-   * @param branch branch
-   */
-  static void updateHeadPtr(String branch) {
-    Utility.writeContentsToFile(gitletHead, branch);
-  }
-
-  /**
-   * Method to return current commit
-   * @return the current commit
-   * @throws IOException i/o issues
-   */
-  static GitletObjects returnCurrentCommit() throws IOException {
-    String headCommitSHA, temp;
-    // check if filename is a file
-    if (!gitletHead.isFile()){
-      throw new IllegalStateException("Please make sure it is a normal filename");
-    }
-    byte[] byteArr = Files.readAllBytes(gitletHead.toPath());
-    temp = new String(byteArr, StandardCharsets.UTF_8);;
-    headCommitSHA = temp.trim();
-    File headCommitFile = Paths.get(gitletLocalHead.toString(), headCommitSHA).toFile();
-    return Utility.readObjectFromFile(headCommitFile, GitletObjects.class);
   }
 
   /**
@@ -120,30 +92,34 @@ public class GitletFileCommand extends GitletFileManage{
 
 
   /**
-   * Methd to add staged
+   * Method to add staged
    * @param id id
    * @param filename file
    * @return true or false if, added to and removed form
    * @throws IOException i/o issues
    */
-  static boolean addStagedToIndex(String id, String filename) throws IOException {
-    GitletObjects fileList;
-    fileList = Utility.readObjectFromFile(gitletInd, GitletObjects.class);
-    if (fileList.staging.containsKey(filename)) {
-      //if dictionary contains the same file, compare hashcode
-      //same as last commit/staged already
-      if (id == fileList.staging.get(filename).id) {
-        //this version and previous version in staging area are the same
-        //don't stage
-        return false;
-      }
+  static boolean addStaged(String id, String filename) throws IOException {
+    GitletObjects staging = readGitletObjects();
+    if (staging.staging.containsKey(filename) && staging.staging.get(filename).id.equals(id)) {
+      return false; // don't stage if the same version already exists in staging area
     }
-    //write update to file
-    GitletId update = new GitletId(id, filename);
-    fileList.staging.put(filename, update);
-
-    //fileList.printDict();
-    Utility.writeObject(gitletInd, fileList);
+    GitletId newId = new GitletId(id, filename);
+    staging.staging.put(filename, newId);
+    writeGitletObjects(staging);
     return true;
+  }
+
+  /**
+   * Helper for to add staged
+   */
+  static GitletObjects readGitletObjects() {
+    return Utility.readObjectFromFile(gitletInd, GitletObjects.class);
+  }
+
+  /**
+   * Helper for to add staged
+   */
+  static void writeGitletObjects(GitletObjects objects) throws IOException {
+    Utility.writeObject(gitletInd, objects);
   }
 }

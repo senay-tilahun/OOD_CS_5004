@@ -18,21 +18,6 @@ import java.security.NoSuchAlgorithmException;
  * Utility class to aid with various tasks.
  */
 public class Utility {
-
-    static String getId(Serializable serGitObjects) throws NoSuchAlgorithmException {
-        String objectString = serGitObjects.toString();
-        byte[] objectBytes = objectString.getBytes(StandardCharsets.UTF_8);
-
-        MessageDigest msgDgt = MessageDigest.getInstance("SHA-1");
-        byte[] hashBytes = msgDgt.digest(objectBytes);
-
-        StringBuilder builder = new StringBuilder();
-        for (byte b : hashBytes) {
-            builder.append(String.format("%02x", b));
-        }
-        return builder.toString();
-    }
-
     /**
      * Method to write contents to file
      * @param filename file to write to
@@ -45,47 +30,7 @@ public class Utility {
             writeObjectsToStream(toRead, stream);
             stream.close();
         } catch (IOException | ClassCastException ex) {
-            ex.printStackTrace();
-//      throw new IllegalArgumentException(ex.getMessage());
-        }
-    }
-
-    /**
-     * Method to check if a file is a directory or not
-     * @param file file to check
-     */
-    static void checkFileIsNotDirectory(File file) {
-        if (file.isDirectory()) {
-            throw new IllegalArgumentException("Directory already exists.");
-        }
-    }
-
-    /**
-     * Method to get output stream of a file
-     * @param file the file given
-     * @return output stream of the file
-     * @throws IOException if not possible to return
-     */
-    static BufferedOutputStream getOutputStream(File file) throws IOException {
-        return new BufferedOutputStream(Files.newOutputStream(file.toPath()));
-    }
-
-    /**
-     * Method to write objects to stream
-     * @param contents objects to write
-     * @param stream steam to write to
-     * @throws IOException if not possible
-     */
-    static void writeObjectsToStream(Object[] contents, BufferedOutputStream stream)
-        throws IOException {
-        for (Object obj : contents) {
-            if (obj instanceof byte[]) {
-                stream.write((byte[]) obj);
-            } else {
-                String string = (String) obj;
-                byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
-                stream.write(bytes);
-            }
+            throw new IllegalArgumentException(ex.getMessage());
         }
     }
 
@@ -94,17 +39,32 @@ public class Utility {
      * @param filename file to read from
      * @return the results of the read
      */
-    static <T extends Serializable> T readObjectFromFile(File filename,
+    public static <T extends Serializable> T readObjectFromFile(File filename,
         Class<T> expectedClass) {
         try {
-            ObjectInputStream inStream = getObjectInputStream(filename);
-            T resultSt = expectedClass.cast(readObjectFromStream(inStream));
+            ObjectInputStream inStream = new ObjectInputStream(new FileInputStream(filename));
+            T result = readObjectFromStream(inStream, expectedClass);
             inStream.close();
-            return resultSt;
-        } catch (IOException | ClassCastException | ClassNotFoundException excp) {
+            return result;
+        } catch (IOException | ClassNotFoundException excp) {
             throw new IllegalArgumentException(excp.getMessage());
         }
     }
+
+    /**
+     * Helper for readObjectFromFile
+     */
+    private static <T extends Serializable> T readObjectFromStream(ObjectInputStream inStream,
+        Class<T> expectedClass)
+        throws IOException, ClassNotFoundException, ClassCastException {
+        Object obj = inStream.readObject();
+        if (expectedClass.isInstance(obj)) {
+            return expectedClass.cast(obj);
+        } else {
+            throw new ClassCastException("Object is not of expected type: " + expectedClass.getName());
+        }
+    }
+
 
     /**
      * Method to get ObjectInputStream
@@ -147,6 +107,62 @@ public class Utility {
         buffer.flip();
         byte[] byteArr = buffer.array();
         writeContentsToFile(file, (Object) byteArr);
+    }
+
+    /**
+     * Method to write objects to stream
+     * @param contents objects to write
+     * @param stream steam to write to
+     * @throws IOException if not possible
+     */
+    static void writeObjectsToStream(Object[] contents, BufferedOutputStream stream)
+        throws IOException {
+        for (Object obj : contents) {
+            if (obj instanceof byte[]) {
+                stream.write((byte[]) obj);
+            } else {
+                String string = (String) obj;
+                byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
+                stream.write(bytes);
+            }
+        }
+    }
+
+    /**
+     * helper method
+     */
+    static String getId(Serializable serGitObjects) throws NoSuchAlgorithmException {
+        String objectString = serGitObjects.toString();
+        byte[] objectBytes = objectString.getBytes(StandardCharsets.UTF_8);
+
+        MessageDigest msgDgt = MessageDigest.getInstance("SHA-1");
+        byte[] hashBytes = msgDgt.digest(objectBytes);
+
+        StringBuilder builder = new StringBuilder();
+        for (byte b : hashBytes) {
+            builder.append(String.format("%02x", b));
+        }
+        return builder.toString();
+    }
+
+    /**
+     * Method to check if a file is a directory or not
+     * @param file file to check
+     */
+    static void checkFileIsNotDirectory(File file) {
+        if (file.isDirectory()) {
+            throw new IllegalArgumentException("Directory already exists.");
+        }
+    }
+
+    /**
+     * Method to get output stream of a file
+     * @param file the file given
+     * @return output stream of the file
+     * @throws IOException if not possible to return
+     */
+    static BufferedOutputStream getOutputStream(File file) throws IOException {
+        return new BufferedOutputStream(Files.newOutputStream(file.toPath()));
     }
 
 }

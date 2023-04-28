@@ -22,17 +22,16 @@ public class Gitlet {
 
     /**
      * Method for command init
-     * Creates the .gitlet directory
-     * Creates the initial commit - commit 0
-     * set up folders and set the zero commit
+     * Creates the .gitlet directory and sub-folders
+     * Creates the initial commit
      */
     void init() throws IOException, NoSuchAlgorithmException {
 //        GitletFileCommand.initializeRepo();
         // Initialize .gitlet folder and sub-folders
         gitletObjects.mkdirs();
-        gitletLocalHead.mkdirs();
+        gitletLocHead.mkdirs();
         // check that directories are correctly created
-        File[] directories = {gitletObjects, gitletLocalHead};
+        File[] directories = {gitletObjects, gitletLocHead};
         for (File folder : directories){
             if (!folder.exists() && !folder.mkdir()){
                 throw new IllegalStateException("Unable to create directory.");
@@ -71,15 +70,14 @@ public class Gitlet {
      * @throws NoSuchAlgorithmException if algo not found
      */
     void add(String fileToAdd) throws IOException, NoSuchAlgorithmException {
-        //staging area is the Tree class under Objects and corresponding index file
-        //first read the file content and make a gitletBlob
-        File newFile = Paths.get(fileToAdd).toFile();
+        // Get and store the file
+        File gitFile = Paths.get(fileToAdd).toFile();
         //Paths.get(first, others).toFile();
-        byte[] temp = Files.readAllBytes(newFile.toPath());
+        // read file
+        byte[] temp = Files.readAllBytes(gitFile.toPath());
         String newFileString = new String(temp, StandardCharsets.UTF_8);
-        // create new gitletBlob
+        // create gitletBlob object and store
         GitletObjects gitletBlob = new GitletObjects(newFileString, fileToAdd);
-        // write the gitletBlob to disk
         GitletFileCommand.writeGitletCommitObject(gitletBlob);
     }
 
@@ -90,17 +88,31 @@ public class Gitlet {
      * @throws NoSuchAlgorithmException if algo not found
      */
     void commit(String msg) throws IOException, NoSuchAlgorithmException {
-        GitletObjects stageAddChanges = GitletFileCommand.readAddedStageEntries();
-        GitletObjects stageRmChanges = GitletFileCommand.readRemovedStageRemovals();
-        if (stageAddChanges.staging.isEmpty() && stageRmChanges.staging.isEmpty()) {
+        // read from stage entries and removals
+        GitletObjects added = GitletFileCommand.readAddedStageEntries();
+        GitletObjects removed = GitletFileCommand.readRemovedStageRemovals();
+        // if nothing staged, no need to commit
+        if (added.staging.isEmpty() && removed.staging.isEmpty()) {
             System.out.println("No changes added to the commit");
             System.exit(0);
         }
-        GitletObjects currHeads = GitletFileCommand.returnCurrentCommit();
-        GitletFileCommand.updateCurrentHeads(currHeads, stageAddChanges, stageRmChanges);
-        createNewCommit(currHeads, msg);
-        writeCommitObject(currHeads);
-        clearStageEntries(stageAddChanges, stageRmChanges);
+        // get current commit
+        String headCommitSHA, temp;
+        // check if filename is a file
+        if (!gitletHead.isFile()){
+            throw new IllegalStateException("Please make sure it is a normal filename");
+        }
+        byte[] byteArr = Files.readAllBytes(gitletHead.toPath());
+        temp = new String(byteArr, StandardCharsets.UTF_8);;
+        headCommitSHA = temp.trim();
+        File headCommitFile = Paths.get(gitletLocHead.toString(), headCommitSHA).toFile();
+        GitletObjects headCommit = Utility.readObjectFromFile(headCommitFile, GitletObjects.class);
+
+        GitletFileCommand.updateCurrentHeads(headCommit, added, removed);
+        createNewCommit(headCommit, msg);
+        writeCommitObject(headCommit);
+        // once committed, clear the staging areas
+        clearStageEntries(added, removed);
     }
 
     /**
@@ -121,10 +133,9 @@ public class Gitlet {
     }
 
     /**
-     *
-     * @param newCommit
-     * @throws IOException
-     * @throws NoSuchAlgorithmException
+     * Method to write commit object
+     * @param newCommit commit to write
+     * @throws IOException i/o issues
      */
     private void writeCommitObject(GitletObjects newCommit)
         throws IOException, NoSuchAlgorithmException {
@@ -138,6 +149,7 @@ public class Gitlet {
      * @throws IOException i/o issues
      */
     private void clearStageEntries(GitletObjects added, GitletObjects removed) throws IOException {
+        // clear the added and removed staging
         GitletObjects.clearStage(added);
         GitletObjects.clearStage(removed);
         GitletObjects.writeStage(gitletInd, added);
@@ -151,16 +163,18 @@ public class Gitlet {
     void log() throws IOException {
         //
         GitletCommit currentCommit = (GitletCommit) getCurrentCommitFromFile();
-        StringBuilder commitContent = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
         String commitName = GitletFileManage.getCurrentGitletHead();
-        // TODO - do I need the mergeCommitLog method ???
+
         while (!currentCommit.getCommitParent().equals("")) {
-            commitContent.append(singleParentCommitLog(currentCommit, commitName));
+            builder.append(singleParentCommitLog(currentCommit, commitName));
             commitName = currentCommit.getCommitParent();
-            currentCommit = (GitletCommit) Utility.readObjectFromFile(GitletFileManage.convertGitletObjectToFile(currentCommit.getCommitParent()), GitletObjects.class);
+            String id = currentCommit.getCommitParent();
+            File file = Paths.get(gitletObjects.getPath(), getHHead(id), getHBody(id)).toFile();
+            currentCommit = (GitletCommit) Utility.readObjectFromFile(file, GitletObjects.class);
         }
-        commitContent.append(finalLog(currentCommit, commitName));
-        System.out.println(commitContent);
+        builder.append(finalLog(currentCommit, commitName));
+        System.out.println(builder);
     }
 
     /**
@@ -168,9 +182,10 @@ public class Gitlet {
      * @return the current commit
      */
     public static GitletObjects getCurrentCommitFromFile() throws IOException {
-        // TODO - update GitletFileManage.getCurrentGitletHead() method
-        String commitHash = getCurrentCommitId();
-        return Utility.readObjectFromFile(GitletFileManage.convertGitletObjectToFile(commitHash), GitletObjects.class);
+        String commitId = getCurrentCommitId();
+        File file = Paths.get(gitletObjects.getPath(),
+            getHHead(commitId), getHBody(commitId)).toFile();
+        return Utility.readObjectFromFile(file, GitletObjects.class);
     }
 
     /**
@@ -180,7 +195,6 @@ public class Gitlet {
     public static String getCurrentCommitId() throws IOException {
         String headFilePath = getHeadFilePath();
         File filename = new File(headFilePath);
-        // check if filename is a file
         if (!filename.isFile()){
             throw new IllegalStateException("Please make sure it is a normal filename");
         }
@@ -190,7 +204,7 @@ public class Gitlet {
     }
 
     /**
-     * Helper for log, gets the head file path
+     * Helper, gets the head file path
      * @return head file path
      */
     public static String getHeadFilePath() {
@@ -203,7 +217,8 @@ public class Gitlet {
      */
     private static String singleParentCommitLog(GitletObjects commit, String comName) {
         GitletCommit com = (GitletCommit) commit;
-        return "=== \n" + "commit " + comName + "\n"
+        return "=== \n"
+            + "commit " + comName + "\n"
             + "Date: " + com.getDateTime() + "\n"
             + com.getMessage() + "\n\n";
     }

@@ -5,18 +5,20 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
- * Main class - driver, contains methods to check and validate user commands
+ * Main class - contains methods to check and validate user commands
+ * Use as follows on command line
+ * Java gitlet.Main <args>
+ *   args will contain the user commands
  */
 public class Main {
-
     /**
-     * Main method - gets user args and checks if valud
-     * @param args user args from terminal
-     * @throws IOException if can't read
+     * Main method - gets user args and checks if valid
+     * @param args user args from command line
+     * @throws IOException if not able to read
      */
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         if (args.length == 0) {
-            System.out.println("Please enter a command.");
+            System.out.println("Please enter at least one gitlet command.");
             System.exit(0);
         }
         parseUserCommand(args);
@@ -24,7 +26,7 @@ public class Main {
     }
 
     /**
-     *  Method to parse user arguments from command line and execute correct command
+     * Method to parse user arguments from command line and execute correct command
      * @param args user arguments from command line
      *  @throws IOException if can't read
      */
@@ -39,11 +41,13 @@ public class Main {
             Valid.validateUserArgNum(args, 1, "init");
             Valid.repoAlreadyExists(); // validate repo doesn't exist
             gitlet.init();
+
         } else if (name.equals("commit")) {
             Valid.validateUserArgNum(ops, 2, "commit");
             // commit changes
             gitlet.commit(args[1]);
             // break
+
         } else if (name.equals("add")) {
             Valid.validateUserArgNum(ops, 2, "add");
             // validate the file name exists in the current directory
@@ -51,10 +55,12 @@ public class Main {
             // add to staging area
             gitlet.add(args[1]);
             // break
+
         } else if (name.equals("log")) {
             Valid.validateUserArgNum(ops, 1, "log");
             gitlet.log();
-            //
+            // break
+
         } else {
             Valid.invalidCommand("Command is invalid.");
         }

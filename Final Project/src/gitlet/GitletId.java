@@ -7,8 +7,10 @@ import java.util.*;
  * Class to represent a Gitlet ID with file name combination
  */
 public class GitletId implements GitSerialize {
-    private final String name;
+    private LinkedList<String> parent;
     public String id;
+    private HashMap<GitletId, GitletBlob> blobRefs;
+    private final String name;
 
 
     /**
@@ -17,9 +19,10 @@ public class GitletId implements GitSerialize {
      * @param name filename
      */
     public GitletId(String id, String name) {
-        this.name = name;
-        //tracked, staged, removed (from stage), modified (not staged)
         this.id = id;
+        this.name = name;
+        this.parent = new LinkedList<>();
+        this.blobRefs = new HashMap<>();
     }
 
     /**
@@ -35,18 +38,6 @@ public class GitletId implements GitSerialize {
      * @return filename
      */
     public String getName() { return this.name; }
-
-    /**
-     * Override hashCode to compare different GitletIDs
-     * @return int hashcode
-     */
-    @Override
-    public int hashCode() {
-        int result = 17;
-        result = 31 * result + name.hashCode();
-        result = 31 * result + id.hashCode();
-        return result;
-    }
 
     /**
      * Override equals method
@@ -66,4 +57,45 @@ public class GitletId implements GitSerialize {
             && Objects.equals(id, other.id);
     }
 
+    /**
+     * Override hashCode to compare different GitletIDs
+     * @return int hashcode
+     */
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + id.hashCode();
+        return result;
+    }
+
+    /**
+     * Getter of Parent
+     * @return Parent of Object related to this GitletID
+     */
+    public LinkedList<String> getParent() {
+        return parent;
+    }
+
+    /**
+     * Setter of Parent
+     */
+    public void setParent(LinkedList<String> parent) {
+        this.parent = parent;
+    }
+
+    /**
+     * Getter of blobReferences
+     * @return blob references
+     */
+    public HashMap<GitletId, GitletBlob> getBlobRefs() {
+        return blobRefs;
+    }
+
+    /**
+     * Setter of blobReferences
+     */
+    public void setBlobRefs(HashMap<GitletId, GitletBlob> blobRefs) {
+        this.blobRefs = blobRefs;
+    }
 }
